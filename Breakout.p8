@@ -35,7 +35,7 @@ function _update()
  end
 
  -- hitting the paddle
- if (ball.y + ball.radius >= paddle.y0 and paddle.x0 <= ball.x and ball.x <= paddle.x1) ball.dy *= -1
+ if (intersect(ball, paddle)) ball.dy *= -1
 end
 
 
