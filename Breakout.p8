@@ -14,12 +14,17 @@ function _init()
  }
 end
 
+
 function _update()
-	--change direction of ball when hitting the wall
+	-- changing direction of ball when hitting the wall
  if (ball.x - ball.radius == 0 or ball.x + ball.radius == 128) ball.dx *= -1
  if (ball.y - ball.radius == 0 or ball.y + ball.radius == 128) ball.dy *= -1
-	ball.x += ball.dx
+	
+ -- moving the ball
+ ball.x += ball.dx
  ball.y += ball.dy
+ 
+ -- moving the paddle
  if btn(0) and paddle.x0 != 0 then
   paddle.x0 -= 1 
   paddle.x1 -= 1
@@ -28,7 +33,11 @@ function _update()
   paddle.x0 += 1
   paddle.x1 += 1
  end
+
+ -- hitting the paddle
+ if (ball.y + ball.radius >= paddle.y0 and paddle.x0 <= ball.x and ball.x <= paddle.x1) ball.dy *= -1
 end
+
 
 function _draw()
 	cls(15)
