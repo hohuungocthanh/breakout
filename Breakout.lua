@@ -22,17 +22,10 @@ function _init()
  bricks = {}
  score = 0
 
- 
- -- points = {
- --  4 = 1,
- --  9 = 5,
- --  2 = 10
- -- }
-
  points = {
-  four = 1,
-  nine = 5,
-  two = 10
+  [4] = 1,
+  [9] = 5,
+  [2] = 10
  }
 end
 
@@ -51,7 +44,7 @@ end
 function createBricks()
  for x = 10, 118, 15 do
   for y = 30, 70, 10 do
-   local brick = createBricks(x, y)
+   local brick = createBrick(x, y)
    brick.color = randomBrickColor()
    add(bricks, brick) 
   end
