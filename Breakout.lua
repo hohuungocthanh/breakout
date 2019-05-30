@@ -21,6 +21,29 @@ function _init()
 
  bricks = {}
  score = 0
+
+ 
+ -- points = {
+ --  4 = 1,
+ --  9 = 5,
+ --  2 = 10
+ -- }
+
+ points = {
+  four = 1,
+  nine = 5,
+  two = 10
+ }
+end
+
+
+-- picking random brick color
+function randomBrickColor()
+ local colors = {}
+ for color, _ in pairs(points) do
+  add(colors, color)
+ end
+ return colors[flr(rnd(#colors)) + 1]
 end
 
 
@@ -28,7 +51,9 @@ end
 function createBricks()
  for x = 10, 118, 15 do
   for y = 30, 70, 10 do
-   add(bricks, createBrick(x, y)) 
+   local brick = createBricks(x, y)
+   brick.color = randomBrickColor()
+   add(bricks, brick) 
   end
  end
 end
@@ -85,7 +110,7 @@ function _update()
     ball.dy = 3
    end
    del(bricks, brick)
-   score += 1  
+   score += points[brick.color]  
   end
  end
 
@@ -107,7 +132,7 @@ function _draw()
 
  -- drawing bricks
  for brick in all(bricks) do
-  rectfill(brick.x0, brick.y0, brick.x1, brick.y1, 4)   
+  rectfill(brick.x0, brick.y0, brick.x1, brick.y1, brick.color)   
  end
 
  -- score
