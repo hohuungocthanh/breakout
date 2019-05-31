@@ -1,5 +1,26 @@
 function _init()
- -- state => "spawn", "game"
+ -- state -> "welcome", "game", "end"
+ state = "welcome"
+ 
+ resetGame()
+ 
+ brick_dimensions = {
+  width = 10,
+  height = 5
+ }
+
+ points = {
+  [9] = 1,
+  [8] = 5,
+  [14] = 10
+ }
+end
+
+function resetGame()
+ score = 0
+ lives = 3
+ 
+ -- ball state => "spawn", "game"
  ball = {
   x = 65, 
   y = 117, 
@@ -16,20 +37,57 @@ function _init()
   y1 = 123
  }
  
- brick_dimensions = {
-  width = 10,
-  height = 5
- }
-
  bricks = {}
- score = 0
- lives = 3
+end 
 
- points = {
-  [9] = 1,
-  [8] = 5,
-  [14] = 10
- }
+function _update()
+ if (state == "welcome") welcome()
+ if (state == "game") game()
+ if (state == "end") endGame()
+end
+
+
+function _draw()
+ if (state == "welcome") drawWelcome()
+ if (state == "game") drawGame()
+ if (state == "end") drawEndGame()
+end
+
+
+function drawWelcome()
+ cls(0)
+ print("Welcome")
+ print("Press z to start", 0, 80, 7)
+end
+
+
+function drawGame() 
+	cls(0)
+
+ -- drawing a ball
+ circfill(ball.x, ball.y, ball.radius, 6)
+
+ -- drawing a paddle
+ rectfill(paddle.x0, paddle.y0, paddle.x1, paddle.y1, 13)
+
+ -- drawing bricks
+ for brick in all(bricks) do
+  rectfill(brick.x0, brick.y0, brick.x1, brick.y1, brick.color)   
+ end
+
+ -- score
+ print(score, 1, 1, 7)
+
+ -- lives
+ print ('lives:'..tostr(lives), 80, 1, 7)
+end
+
+
+function drawEndGame()
+ cls(0)
+ print("You died", 0, 30, 7)
+ print("Your score is:"..tostr(score), 0, 50, 7)
+ print("Press z to restart", 0, 80, 7)
 end
 
 
@@ -68,9 +126,14 @@ function createBrick (x, y)
 end
 
 
-function _update()
+function welcome()
+ if (btn(4)) state = "game"
+end
+
+
+function game() 
  -- ball state changed when pressed x or z button
- if (btn(4) or btn(5)) ball.state = "game"
+ if (btn(5)) ball.state = "game"
  
  -- only allow the ball to bounce around if the state is in "game"
  if ball.state == "game" then
@@ -132,37 +195,26 @@ function _update()
  end
 
  -- respawning ball when losing a life
- if ball.y + ball.radius >= 128 and lives > 0 then
+ if ball.y + ball.radius >= 128 then
+ 
+ 	if lives > 0 then
    ball.x = (paddle.x1 + paddle.x0) / 2
    ball.y = paddle.y0 - ball.radius
    ball.state = "spawn"
    
    lives -= 1
+  
+  -- no more lives
+  else 
+	 state = "end"
+  end
  end
-
- -- if lives == 0 and ball.y + ball.radius >= 128 then 
- --  print('No more life!', 10, 10, 7)
- -- end .
 end
 
 
-function _draw()
- cls(0)
-
- -- drawing a ball
- circfill(ball.x, ball.y, ball.radius, 6)
-
- -- drawing a paddle
- rectfill(paddle.x0, paddle.y0, paddle.x1, paddle.y1, 13)
-
- -- drawing bricks
- for brick in all(bricks) do
-  rectfill(brick.x0, brick.y0, brick.x1, brick.y1, brick.color)   
+function endGame()
+ if btn(4) then
+  state = "game"
+  resetGame()
  end
-
- -- score
- print(score, 1, 1, 7)
-
- -- lives
- print ('lives:'..tostr(lives), 80, 1, 7)
 end
