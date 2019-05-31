@@ -23,3 +23,7 @@ function abs(a)
  if (a < 0) a *= -1
  return a
 end
+
+function getMagnitude(x, y)
+ return (x^2 + y^2)^(1/2)
+end    

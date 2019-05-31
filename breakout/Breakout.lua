@@ -16,6 +16,8 @@ function _init()
  }
 end
 
+
+
 function resetGame()
  score = 0
  lives = 3
@@ -29,6 +31,8 @@ function resetGame()
   radius = 3,
   state = "spawn"
  }
+ 
+ ball.speed = getMagnitude(ball.dx, ball.dy)
  
  paddle = {
   x0 = 50,
@@ -65,7 +69,7 @@ function drawGame()
 	cls(0)
 
  -- drawing a ball
- circfill(ball.x, ball.y, ball.radius, 6)
+ circfill(flr(ball.x), flr(ball.y), ball.radius, 6)
 
  -- drawing a paddle
  rectfill(paddle.x0, paddle.y0, paddle.x1, paddle.y1, 13)
@@ -165,25 +169,31 @@ function game()
  	if (ball.state == "spawn") ball.x += 5
  end
  
+ 
  -- hitting the paddle
  if intersect(ball, paddle) then
-  ball.dy = -3
   paddle.x = (paddle.x0 + paddle.x1)/2
+  paddle.y = (paddle.y1 + paddle.y0)/2
+  
+  ball.dx = abs(ball.x - paddle.x)
+  ball.dy = abs(ball.y - paddle.y)
+  
+  local newSpeed = getMagnitude(ball.dx, ball.dy)
+  local speedRatio = ball.speed / newSpeed
+  
+  ball.dy *= speedRatio * -1
+  ball.dx *= speedRatio
+  
   if (ball.x < paddle.x) then
-   ball.dx = -3
-  else
-   ball.dx = 3
+   ball.dx *= -1 
   end 
  end
 
  -- hitting the brick
  for brick in all(bricks) do
   if intersect(ball, brick) then
-   if (ball.y < brick.y) then
-    ball.dy = -3
-   else
-    ball.dy = 3
-   end
+   ball.dy = abs(ball.dy)
+   if (ball.y < brick.y) ball.dy *= -1 
    del(bricks, brick)
    score += points[brick.color]  
   end
