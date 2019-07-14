@@ -2,7 +2,7 @@ function _init()
  -- state -> "welcome", "game", "end"
  state = "welcome"
  
- resetGame()
+ reset_game()
  
  brick_dimensions = {
   width = 10,
@@ -18,7 +18,7 @@ end
 
 
 
-function resetGame()
+function reset_game()
  score = 0
  lives = 3
  
@@ -28,11 +28,11 @@ function resetGame()
   y = 117, 
   dx = 3,
   dy = 3,
-  radius = 3,
+  radius = 2,
   state = "spawn"
  }
  
- ball.speed = getMagnitude(ball.dx, ball.dy)
+ ball.speed = get_magnitude(ball.dx, ball.dy)
  
  paddle = {
   x0 = 50,
@@ -47,25 +47,26 @@ end
 function _update()
  if (state == "welcome") welcome()
  if (state == "game") game()
- if (state == "end") endGame()
+ if (state == "end") end_game()
 end
 
 
 function _draw()
- if (state == "welcome") drawWelcome()
- if (state == "game") drawGame()
- if (state == "end") drawEndGame()
+ if (state == "welcome") draw_welcome()
+ if (state == "game") draw_game()
+ if (state == "end") draw_end_game()
 end
 
 
-function drawWelcome()
+function draw_welcome()
  cls(0)
- print("Welcome")
- print("Press z to start", 0, 80, 7)
+ print("welcome")
+ print("press z to start", 0, 80, 7)
+ print("then press x to shoot ball", 0, 90, 7) 
 end
 
 
-function drawGame() 
+function draw_game() 
 	cls(0)
 
  -- drawing a ball
@@ -87,16 +88,16 @@ function drawGame()
 end
 
 
-function drawEndGame()
+function draw_end_game()
  cls(0)
- print("You died", 0, 30, 7)
- print("Your score is:"..tostr(score), 0, 50, 7)
- print("Press z to restart", 0, 80, 7)
+ print("you died", 0, 30, 7)
+ print("your score is:"..tostr(score), 0, 50, 7)
+ print("press z to restart", 0, 80, 7)
 end
 
 
 -- picking random brick color
-function randomBrickColor()
+function random_brick_color()
  local colors = {}
  for color, _ in pairs(points) do
   add(colors, color)
@@ -106,11 +107,11 @@ end
 
 
 -- creating many bricks
-function createBricks()
+function create_bricks()
  for x = 10, 118, 15 do
   for y = 30, 50, 10 do
-   local brick = createBrick(x, y)
-   brick.color = randomBrickColor()
+   local brick = create_brick(x, y)
+   brick.color = random_brick_color()
    add(bricks, brick) 
   end
  end
@@ -118,7 +119,7 @@ end
 
 
 -- creating one brick
-function createBrick (x, y)
+function create_brick (x, y)
  return {
   x0 = x - (brick_dimensions.width / 2),
   x1 = x + (brick_dimensions.width / 2),
@@ -153,9 +154,9 @@ function game()
  -- moving the paddle
  -- move paddle left
  if btn(0) and paddle.x0 >= 0 then
-  paddle.x0 -= 5 
+  paddle.x0 -= 5
   paddle.x1 -= 5
-  
+
   -- move ball with paddle if the ball state is "spawn"
   if (ball.state == "spawn") ball.x -= 5
  end
@@ -164,10 +165,10 @@ function game()
  if btn(1) and paddle.x1 <= 128 then
   paddle.x0 += 5
   paddle.x1 += 5
-  
   -- move ball with paddle if the ball state is "spawn"
  	if (ball.state == "spawn") ball.x += 5
  end
+ 
  
  
  -- hitting the paddle
@@ -178,11 +179,11 @@ function game()
   ball.dx = abs(ball.x - paddle.x)
   ball.dy = abs(ball.y - paddle.y)
   
-  local newSpeed = getMagnitude(ball.dx, ball.dy)
-  local speedRatio = ball.speed / newSpeed
+  local new_speed = get_magnitude(ball.dx, ball.dy)
+  local speed_ratio = ball.speed / new_speed
   
-  ball.dy *= speedRatio * -1
-  ball.dx *= speedRatio
+  ball.dy *= speed_ratio * -1
+  ball.dx *= speed_ratio
   
   if (ball.x < paddle.x) then
    ball.dx *= -1 
@@ -201,7 +202,7 @@ function game()
 
  -- respawning bricks when all are gone
  if #bricks == 0 then
-  createBricks()
+  create_bricks()
  end
 
  -- respawning ball when losing a life
@@ -222,9 +223,9 @@ function game()
 end
 
 
-function endGame()
+function end_game()
  if btn(4) then
   state = "game"
-  resetGame()
+  reset_game()
  end
 end

@@ -4,19 +4,19 @@ function intersect(circle, rect)
  rect.width = rect.x1 - rect.x0
  rect.height =rect.y1 -rect.y0
 
- local circleDistance = {}
- circleDistance.x = abs(circle.x - rect.x)
- circleDistance.y = abs(circle.y - rect.y)
+ local circle_distance = {}
+ circle_distance.x = abs(circle.x - rect.x)
+ circle_distance.y = abs(circle.y - rect.y)
  
- if (circleDistance.x > (rect.width/2 + circle.radius)) return false
- if (circleDistance.y > (rect.height/2 + circle.radius)) return false
+ if (circle_distance.x > (rect.width/2 + circle.radius)) return false
+ if (circle_distance.y > (rect.height/2 + circle.radius)) return false
 
- if (circleDistance.x <= (rect.width/2)) return true 
- if (circleDistance.y <= (rect.height/2)) return true
+ if (circle_distance.x <= (rect.width/2)) return true 
+ if (circle_distance.y <= (rect.height/2)) return true
 
- local cornerDistance_sq = (circleDistance.x - rect.width/2)^2 + (circleDistance.y - rect.height/2)^2
+ local corner_distance_sq = (circle_distance.x - rect.width/2)^2 + (circle_distance.y - rect.height/2)^2
 
- return (cornerDistance_sq <= (circle.radius^2))
+ return (corner_distance_sq <= (circle.radius^2))
 end
 
 function abs(a)
@@ -24,6 +24,6 @@ function abs(a)
  return a
 end
 
-function getMagnitude(x, y)
+function get_magnitude(x, y)
  return (x^2 + y^2)^(1/2)
 end    
